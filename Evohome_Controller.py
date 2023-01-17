@@ -24,10 +24,10 @@ import serial                     # import the modules
 import time
 import datetime
 
-output_log = open("e:\\Python\\Evohome_Controller.log", "w")
+output_log = open("Evohome_Controller.log", "w")
 
-ComPort = serial.Serial('COM8')   # open port COM8
-ComPort.baudrate = 76800          # set Baud rate to 250000
+ComPort = serial.Serial("/dev/ttyUSB0")   # open port COM8
+ComPort.baudrate = 115200          # set Baud rate to 250000
 ComPort.bytesize = 8              # Number of data bits = 8
 ComPort.parity   = 'N'            # No parity
 ComPort.stopbits = 1              # Number of Stop bits = 1
@@ -36,13 +36,18 @@ ComPort.timeout = 1               # Read timeout = 1sec
 # Set-up Controller and Zone information
 ControllerID = 0x55555            # Set this to any value as long as ControllerTYPE=1
 
-# Zone definition: deviceID placeholder (TYPE:ADRR), name, placeholder for name (Hex string), setpoint, placeholder for setpoint (Hex string), placeholder for temp (Hex string)
+# Zone definition: deviceID placeholder (TYPE:ADRR),
+#                  name, placeholder for name (Hex string),
+#                  setpoint, placeholder for setpoint (Hex string),
+#                  placeholder for temp (Hex string)
 Zone_INFO = [
-             ['','Zone1','','8.5','',''],
-             ['','Zone2','','11.3','','']
-             ]                    
-
-Zone_num = 2                      # Number of zones 
+             ['04:092553','Obyvak','','22.5','',''],
+             ['04:092555','Kuchyne','','22.5','',''],
+             ['04:092539','Loznice','','18.0','',''],
+             ['04:092791','Pokojicek','','20.5','','']
+            ]
+                    
+Zone_num = 4                      # Number of zones 
 
 Device_count = 0                  # Count of devices successfully bound
 
@@ -65,16 +70,16 @@ ControllerADDR = ControllerID & 0x03FFFF;
 ControllerTXT = bytearray(b'%02d:%06d' %(ControllerTYPE, ControllerADDR))
 
 # Populate zone name Hex strings
-for i in xrange(0,Zone_num):
+for i in range(0,Zone_num):
    Hex_name = ''.join('{0:02X}'.format(ord(c)) for c in Zone_INFO[i][1])
-   Hex_pad = ''.join('00' for j in xrange(len(Zone_INFO[i][1]),20))            
+   Hex_pad = ''.join('00' for j in range(len(Zone_INFO[i][1]),20))            
    Zone_INFO[i][2] = Hex_name + Hex_pad
 
 # Populate setpoint Hex strings
-for i in xrange(0,Zone_num):
+for i in range(0,Zone_num):
    Hex_name = '{0:04X}'.format(int(float(Zone_INFO[i][3]) * 100))         
    Zone_INFO[i][4] = Hex_name
-   print('Zone %d:(%s):(%s):(%s:0x%s)' % (i+1,Zone_INFO[i][0],Zone_INFO[i][1],Zone_INFO[i][3],Zone_INFO[i][4]))
+   print('Zone %d:(%s:%s):(0x%s):(%s:0x%s)' % (i+1,Zone_INFO[i][0],Zone_INFO[i][1],Zone_INFO[i][2],Zone_INFO[i][3],Zone_INFO[i][4]))
 
 print('ControllerID=0x%06X (%s)' % (ControllerID, ControllerTXT))
 ##### End of setup
