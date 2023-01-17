@@ -189,11 +189,11 @@ while True:
        No = ComPort.write(send_data)
        SendTXT = ''.join(('{0:02d}'.format(j) + Zone_INFO[j][4]) for j in range(0, Device_count))
        Send_len = len(SendTXT) / 2
-       send_data = bytearray('I --- %s --:------ %s %04X %03d %s\r\n' % (ControllerTXT, ControllerTXT, Com_SETP, Send_len, SendTXT),'ASCII')
+       send_data = bytearray(b'I --- %s --:------ %s %04X %03d %s\r\n' % (ControllerTXT, ControllerTXT, Com_SETP, Send_len, SendTXT))
        print('Send:(%s)' % send_data)
        No = ComPort.write(send_data)
        SendTXT = ''.join(('{0:02d}'.format(j) + Zone_INFO[j][5]) for j in range(0, Device_count))
-       send_data = bytearray('I --- %s --:------ %s %04X %03d %s\r\n' % (ControllerTXT, ControllerTXT, Com_TEMP, Send_len, SendTXT),'ASCII') 
+       send_data = bytearray(b'I --- %s --:------ %s %04X %03d %s\r\n' % (ControllerTXT, ControllerTXT, Com_TEMP, Send_len, SendTXT)) 
        print('Send:(%s)' % send_data)
        No = ComPort.write(send_data)
        
